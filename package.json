@@ -1,0 +1,19 @@
+{
+  "name": "cryptoserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Burton",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.5.0",
+    "eth-lightwallet": "^2.5.6",
+    "monero-nodejs": "^3.2.2",
+    "node-litecoin": "^1.0.1",
+    "ripple-lib": "^0.17.7",
+    "web3": "^0.19.1"
+  }
+}
