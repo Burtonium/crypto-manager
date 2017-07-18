@@ -1,10 +1,16 @@
 const RippleAPI = require('ripple-lib').RippleAPI;
 const api = new RippleAPI({server: 'ws://localhost:6006'});
+const CryptoServer = require('../../cryptoserver').CryptoServer;
+const addressesPath = __dirname + '/.addresses.json';
 
-api.connect().then(() => {
-   api.getServerInfo().then((info) => {
-       console.log(info);
-   });
-}, (err) => {
-    console.log(err);
-});
+class RippleServer extends CryptoServer {
+    constructor() {
+        super();
+    }
+    
+    async init() {
+        await Promise.all([api.connect(), super.loadAddresses(addressesPath)]);
+    }
+}
+
+exports.RippleServer = RippleServer;
