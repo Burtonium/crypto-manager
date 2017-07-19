@@ -12,12 +12,16 @@ const serverConfig = {
 
 class LitecoinServer extends CryptoServer {
     constructor() {
-        super();
+        super('ltc');
     }
 
     async init() {
         this.client = new litecoin.Client(serverConfig);
         await super.loadAddresses(addressesPath);
+    }
+    
+    getAddressBuffer(index) {
+        return "";
     }
 }
 

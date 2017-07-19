@@ -6,30 +6,31 @@ const assert = require('assert');
 class KnexStore {
     constructor(table) {
         assert(table, 'Table name required.');
-        this.table = table;
+        this._knex = knex;
+        this.knex = () => {return this._knex(table)};
     }
 
     findAll() {
-        return knex(this.table).select();
+        return this.knex().select();
     }
 
     findWhere(criterion) {
-        return knex(this.table).where(criterion);
+        return this.knex().where(criterion);
     }
 
     findOne(criterion) {
         if (!criterion) {
             return this.findAll().first();
         }
-        return knex(this.table).where(criterion).first();
+        return this.knex().where(criterion).first();
     }
 
     deleteWhere(criterion) {
-        return knex(this.table).where(criterion).del();
+        return this.knex().where(criterion).del();
     }
 
     insert(object) {
-        return knex(this.table).insert(object).returning('*');
+        return this.knex().insert(object).returning('*');
     }
 
     update(object, criterion) {
@@ -38,10 +39,13 @@ class KnexStore {
                 id: object.id
             };
         }
-        return knex(this.table).where(criterion).update(object).returning('*');
+        return this.knex().where(criterion).update(object).returning('*');
     }
+    
 }
 
-module.exports = function(table) {
+module.exports.create = function(table) {
     return new KnexStore(table);
 };
+
+module.exports.KnexStore = KnexStore;

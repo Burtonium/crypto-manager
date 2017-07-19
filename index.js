@@ -6,6 +6,7 @@ const routes = require('./routes');
 const EthereumServer = require('./servers/ethereum/ethereum').EthereumServer;
 const LitecoinServer = require('./servers/litecoin/litecoin').LitecoinServer;
 const RippleServer = require('./servers/ripple/ripple').RippleServer;
+const transactions = require('./db/transactions');
 
 const servers = {
     eth: new EthereumServer(),
@@ -13,24 +14,40 @@ const servers = {
     xrp: new RippleServer()
 };
 
-(async() => {
+const currencies = Object.keys(servers);
+
+( async () => {
     await Promise.all(Object.values(servers).map((server) => {
         return server.init();
     }));
-    servers.eth.update();
+    
+    console.log(await servers.eth.getBalancesFromIndex(8));
+    
 })().then(() => {
-
-    app.get('/:id', function(req, res) {
-        let id = req.params.id;
+    
+    const parseIndex = (index, next) => {
+        if (!index.match(/^\d+$/)) {
+            next();
+        }
+        return parseInt(index);
+    }
+    
+    const parseCurrency = (currency, next) => {
+        if (!servers[currency]) next();
+        return currency;
+    }
+    
+    app.get('/:index', (req, res, next) => {
+        const index = parseIndex(req.params.index, next);
         var response = {};
         for (var s in servers) {
             response[s] = {};
-            response[s].address = servers[s].getAddress(id);
+            response[s].address = servers[s].getAddress(index);
         }
         res.json(response);
     });
 
-    app.get('/:id/:currency', function(req, res, next) {
+    app.get('/:id/:currency', (req, res, next) => {
         const id = req.params.id;
         const currency = req.params.currency;
         if (!servers[currency]) {
@@ -41,12 +58,8 @@ const servers = {
         }
     });
     
-    app.get('/:id/balance', function(req, res){
-        
-    });
-    
-    app.post('/:id/:currency/send', function(req,res, next){
-        const id = req.params.id;
+    app.post('/:id/:currency/send', (req,res, next) => {
+        const id = parseIndex(req.params.id, next);
         const currency = req.params.currency; 
         const address = req.params.address || req.params.to;
         
@@ -58,15 +71,17 @@ const servers = {
         }
     });
     
-    app.get(':id/transactions', function(req, res){
-        
+    app.get('/:id/transactions', async (req, res, next) => {
+        const id = parseIndex(req.params.id, next);
+        servers.map((server) => {
+            return server.getTransactions(id);
+        })
+        res.json({});
     });
     
-    app.get(':id/:currency/transactions', function(req, res){
+    app.get(':id/:currency/transactions', (req, res) => {
         
     });
-    
-    app.get('/:id:')
 
     if (!module.parent) {
         app.listen(port, function(err) {

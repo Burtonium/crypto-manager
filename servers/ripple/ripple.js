@@ -5,11 +5,15 @@ const addressesPath = __dirname + '/.addresses.json';
 
 class RippleServer extends CryptoServer {
     constructor() {
-        super();
+        super('xrp');
     }
     
     async init() {
         await Promise.all([api.connect(), super.loadAddresses(addressesPath)]);
+    }
+    
+    getAddressBuffer(index) {
+        return "";
     }
 }
 

@@ -13,6 +13,7 @@
   "dependencies": {
     "async": "^2.5.0",
     "base-x": "^3.0.2",
+    "bignumber.js": "^4.0.2",
     "bip39": "^2.3.1",
     "body-parser": "^1.17.2",
     "eth-lightwallet": "^2.5.6",

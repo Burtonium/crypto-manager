@@ -7,8 +7,8 @@ exports.up = function(knex, Promise) {
         table.binary('from', 64).notNullable().index();
         table.binary('to', 64).notNullable().index();
         table.bigInteger('value').notNullable().index();
+        table.bigInteger('fee').notNullable().index();
         table.enu('currency', currencies).notNullable().index();
-        table.bigInteger('user_id').notNullable().index();
     });
 };
 

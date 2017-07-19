@@ -4,8 +4,8 @@ const CryptoServer = require('../../cryptoserver').CryptoServer;
 const assert = require('assert');
 const addressesPath = __dirname + '/.addresses.json';
 const debug = require('debug')('app:ethereum_server');
-const KnexStore = require('../../db/knexstore');
-const transactionStore = new KnexStore('transactions');
+const KnexStore = require('../../db/knexstore').KnexStore;
+const transactions = require("../../db/transactions");
 const syncStates = new KnexStore('transaction_sync');
 
 const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
@@ -13,18 +13,18 @@ assert(web3.isConnected(), 'Could not connect to geth. Did you forget --rpc when
 
 class EthereumServer extends CryptoServer {
     constructor() {
-        super();
+        super('eth');
     }
 
     async init() {
         this.loadAddresses(addressesPath);
-        
         this.setupBlockWatcher();
+        this.update();
     }
-    
+
     async loadAddresses() {
         await super.loadAddresses(addressesPath);
-        
+
         /* Ethereum addresses are not case sensitive */
         this._keyPairs.map((kp, i) => {
             this._addresses[kp.address.toLowerCase()] = i;
@@ -34,12 +34,12 @@ class EthereumServer extends CryptoServer {
     async update() {
 
         let lastSynched = await syncStates.findOne({
-            currency: 'eth'
+            currency: this.currency
         });
 
         if (typeof lastSynched === 'undefined') {
             lastSynched = await syncStates.insert({
-                currency: 'eth',
+                currency: this.currency,
                 latest_synchronized_block: -1
             });
         }
@@ -48,16 +48,14 @@ class EthereumServer extends CryptoServer {
         let lastBlock = parseInt(lastSynched.latest_synchronized_block);
         while (lastBlock != await this.currentBlock()) {
             let block = await this.getTransactions(lastBlock + 1);
-            
+
             if (block !== null && block.transactions !== null) {
                 let inserts = [];
                 block.transactions.map((t) => {
+                    const index = this.addresses[t.from] || this.addresses[t.to];
 
-                    let index = this.addresses[t.from] ||
-                                this.addresses[t.to];
-                    
                     if (index) {
-                        let insert = transactionStore.insert({
+                        let insert = transactions.insert({
                             txid: Buffer.from(t.hash.substring(2), 'hex'),
                             block: t.blockNumber,
                             created: new Date(block.timestamp * 1000),
@@ -65,7 +63,7 @@ class EthereumServer extends CryptoServer {
                             to: Buffer.from(t.to.substring(2), 'hex'),
                             value: t.value.toString(),
                             currency: 'eth',
-                            user_id: index
+                            fee: t.gasPrice.times(t.gas).toString()
                         });
                         inserts.push(insert);
                     }
@@ -75,9 +73,11 @@ class EthereumServer extends CryptoServer {
                     console.log('Inserting transaction failed, skipping...');
                 });
             }
-            
+
             lastSynched.latest_synchronized_block++;
-            let updated = await syncStates.update(lastSynched, {currency: 'eth'});
+            let updated = await syncStates.update(lastSynched, {
+                currency: this.currency
+            });
             assert(updated.length, 'Unable to sync to block:' + (lastBlock + 1));
             lastSynched = updated[0];
             lastBlock = parseInt(lastSynched.latest_synchronized_block);
@@ -89,12 +89,22 @@ class EthereumServer extends CryptoServer {
     async getTransactions(block) {
         return new Promise((resolve, reject) => {
             web3.eth.getBlock(block, true, (err, result) => {
-                if(err) {reject(err);}
+                if (err) {
+                    reject(err);
+                }
                 resolve(result);
             });
         });
     }
-
+    
+    getAddress(index) {
+        return Buffer.from(super.getAddress(index).substring(2), 'hex');
+    }
+    
+    getBalancesFromIndex(index) {
+        return super.getBalances(this.getAddress(index));
+    }
+    
     currentBlock() {
         return new Promise((resolve, reject) => {
             web3.eth.getBlockNumber((err, result) => {
@@ -124,6 +134,8 @@ class EthereumServer extends CryptoServer {
             }
         });
     }
+    
+    
 }
 
 exports.EthereumServer = EthereumServer;
