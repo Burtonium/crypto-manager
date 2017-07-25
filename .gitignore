@@ -59,3 +59,6 @@ typings/
 
 # wallets
 servers/*/*.json
+
+# weird xmlhttprequest files
+.node-xmlhttprequest*

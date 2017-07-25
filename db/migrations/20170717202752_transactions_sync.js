@@ -1,11 +1,12 @@
 const currencies = require('../currencies');
 exports.up = function(knex, Promise) {
-    return knex.schema.createTable('transaction_sync', (table) => {
+    return knex.schema.createTable('transactions_sync', (table) => {
         table.enu('currency', currencies).notNullable().unique();
-        table.bigInteger('latest_synchronized_block').notNullable();
+        table.bigInteger('block').notNullable();
+        table.binary('hash', 64);
     })
 };
 
 exports.down = function(knex, Promise) {
-    return knex.schema.dropTable('transaction_sync');
+    return knex.schema.dropTable('transactions_sync');
 };

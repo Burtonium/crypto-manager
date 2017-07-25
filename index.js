@@ -1,11 +1,13 @@
 const express = require('express');
 const app = express();
+const params = require('express-params');
 const port = 2121;
 const bodyParser = require('body-parser');
 const routes = require('./routes');
 const EthereumServer = require('./servers/ethereum/ethereum').EthereumServer;
 const LitecoinServer = require('./servers/litecoin/litecoin').LitecoinServer;
 const RippleServer = require('./servers/ripple/ripple').RippleServer;
+const CryptoServer = require('./cryptoserver').CryptoServer;
 const transactions = require('./db/transactions');
 
 const servers = {
@@ -16,71 +18,144 @@ const servers = {
 
 const currencies = Object.keys(servers);
 
-( async () => {
+const parallelize = async (task, args) => {
+    if (args.constructor !== Array) {
+        args = [args];
+    }
+    let response = {};
+    let promises = [];
+    for (let k in servers) {
+        let promise = servers[k][task](...args).then((r) => {
+            response[k] = r;
+        });
+        promises.push(promise);
+    }
+    await Promise.all(promises);
+    return response;
+}
+
+
+(async() => {
     await Promise.all(Object.values(servers).map((server) => {
         return server.init();
     }));
     
-    console.log(await servers.eth.getBalancesFromIndex(8));
-    
 })().then(() => {
     
-    const parseIndex = (index, next) => {
-        if (!index.match(/^\d+$/)) {
-            next();
-        }
-        return parseInt(index);
-    }
+    /* Parameters */
+    params.extend(app);
+    app.param('index', /\d+/);
+    app.param('currency', (c) => {
+        return currencies.includes(c) ? c : false;
+    });
     
-    const parseCurrency = (currency, next) => {
-        if (!servers[currency]) next();
-        return currency;
-    }
     
+    /* Routes */
     app.get('/:index', (req, res, next) => {
-        const index = parseIndex(req.params.index, next);
-        var response = {};
+        const index = req.params.index;
+
+        let response = {};
         for (var s in servers) {
+            let address =  servers[s].getAddress(index);
             response[s] = {};
-            response[s].address = servers[s].getAddress(index);
+            if (address) {
+                response[s].address = address;
+            } 
         }
+        if(!response)
+            res.status(404).send('Index not found');
         res.json(response);
     });
 
-    app.get('/:id/:currency', (req, res, next) => {
-        const id = req.params.id;
+    app.get('/:index/balance', async(req, res, next) => {
+        const index = req.params.index;
+
+        const response = await parallelize('getBalancesFromIndex', index);
+        res.json(response);
+    });
+
+    app.get('/:index/:currency', (req, res, next) => {
+        const index = req.params.index;
         const currency = req.params.currency;
-        if (!servers[currency]) {
-            next();
-        }
-        else {
-            res.json({address: servers[currency].getAddress(id)});
-        }
+
+        res.json({
+            address: servers[currency].getAddress(index)
+        });
     });
     
-    app.post('/:id/:currency/send', (req,res, next) => {
-        const id = parseIndex(req.params.id, next);
-        const currency = req.params.currency; 
-        const address = req.params.address || req.params.to;
+    app.get('/:index/:currency/balance', async (req, res, next) => {
+        const index = req.params.index;
+        const currency = req.params.currency;
         
-        if (!servers[currency]) {
-            next();
-        }
-        else {
-            
-        }
+
+        let response = await servers[currency].getBalancesFromIndex(index);
+
+        res.json(response);
     });
-    
-    app.get('/:id/transactions', async (req, res, next) => {
-        const id = parseIndex(req.params.id, next);
-        servers.map((server) => {
-            return server.getTransactions(id);
-        })
-        res.json({});
-    });
-    
-    app.get(':id/:currency/transactions', (req, res) => {
+
+    app.post('/:index/:currency/send', (req, res, next) => {
+        const index = req.params.index;
+        const currency = req.params.currency;
+        const address = req.body.to;
         
+        next();
+    });
+
+    app.get('/:index/transactions', async(req, res, next) => {
+        const index = req.params.index;
+ 
+        let response = await parallelize('getTransactions', index);
+        res.json(response);
+    });
+    
+    app.get('/:index/deposits', async(req, res, next) => {
+        const index = req.params.index;
+        
+        let response = await parallelize('getDeposits', index);
+        res.json(response);
+    });
+    
+    app.get('/:index/withdrawals', async (req, res, next) => {
+        const index = req.params.index;
+        
+        let response = await parallelize('getWithdrawals', index);
+        res.json(response);
+    });
+    
+    app.get('/:index/:currency/transactions', async (req, res, next) => {
+        const index = req.params.index;
+        const currency = req.params.currency;
+
+        let response = await servers[currency].getTransactions(index);
+        res.json(response);
+    });
+    
+        
+    app.get('/:index/:currency/withdrawals', async (req, res, next) => {
+        const index = req.params.index;
+        const currency = req.params.currency;
+
+        let response = await servers[currency].getWithdrawals(index);
+        res.json(response);
+    });
+    
+        
+    app.get('/:index/:currency/deposits', async (req, res, next) => {
+        const index = req.params.index;
+        const currency = req.params.currency;
+
+        let response = await servers[currency].getDeposits(index);
+        res.json(response);
+    });
+    
+    app.get('*', function(req, res) {
+        res.status(404).send({error: 'Not found'});
+    });
+    
+    /* Error handler */
+    app.use((err,req, res, next) => {
+        console.log(err);
+        res.status(err.status || 500).send(err.message || 'Something went wrong');
     });
 
     if (!module.parent) {
