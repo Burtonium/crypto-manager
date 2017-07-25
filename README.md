@@ -1,13 +1,13 @@
 ## CryptoManager
 
-This is a fully featured multi cryptocurrency RESTful application to manage funds from different crypto currencies. 
+This is a fully featured multi cryptocurrency RESTful application to manage funds from different crypto currencies using a single mnemonic seed. 
 
 ## Example
 
 Getting an addresses 
 
 ```bash
-    $curl -X GET http://<serverurl>/2
+    $curl -X GET http://localhost:2121/2
 ```
 
 will yield the following response:
@@ -54,13 +54,17 @@ Then run npm start. You can choose a port of your own if not it will choose port
    `index=[integer]`
    
    **Optional:**
+   
    `currency=[eth|ltc|xrp]`
 
 * **Success Response:**
 
-  * **Code:** 200 <br />
+  * **Code:** 
+
+  `200` <br />
 
 * **Example Return Value:** 
+
 ```json 
 {
 	"eth": {
@@ -77,8 +81,12 @@ Then run npm start. You can choose a port of your own if not it will choose port
  
 * **Error Responses:**
 
-  * **Code:** 404 NOT FOUND <br />
+  * **Code:** 
+    
+    `404 NOT FOUND` <br />
+
   * ***Content:** 
+  
     ```json 
     { "error" : "Not found" }
     ```
@@ -110,9 +118,12 @@ Then run npm start. You can choose a port of your own if not it will choose port
 
 * **Success Response:**
 
-  * **Code:** 200 <br />
+  * **Code:** 
+
+  `200` <br />
 
 * **Example Return Value:** 
+
 ```json 
 {
 	"eth": {
@@ -138,8 +149,13 @@ Then run npm start. You can choose a port of your own if not it will choose port
  
 * **Error Response:**
 
-  * **Code:** 404 NOT FOUND <br />
-    **Content:** `{ "error" : "Not found" }`
+  * **Code:** 
+
+  `404 NOT FOUND` <br />
+  
+    **Content:** 
+    
+  `{ "error" : "Not found" }`
 
 
 **Get an acccount's transactions**
@@ -171,11 +187,14 @@ Then run npm start. You can choose a port of your own if not it will choose port
    `index=[integer]`
    
    **Optional:**
-   `currency=[eth|ltc|xrp]
+   
+   `currency=[eth|ltc|xrp]`
 
 * **Success Response:**
 
-  * **Code:** 200 <br />
+  * **Code:** 
+
+  `200` <br />
 
 * **Example Return Value:** 
 ```json 
@@ -217,4 +236,5 @@ No tests as of yet
 ## License
 
 ***Internal Use Only***
+
 All rights reserved by 1081627 BC Ltd
