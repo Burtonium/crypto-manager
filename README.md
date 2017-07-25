@@ -55,17 +55,27 @@ Then run npm start. You can choose a port of your own if not it will choose port
 
   * **Code:** 200 <br />
   * **Content:** 
-```json 
-{"eth":{"address":"0x879640A080fFbeBF3E31D7D0d34ba4b223f8a84D"},"ltc":{"address":"LU1D7pdQA3wb3kNcxH1W86zovhH2RcShTx"},"xrp":{"address":"rp4rFSJgR6CAcR9LSRJRR2NtYFGnaSwNty"}}
-```
+    ```json 
+    {
+    	"eth": {
+    		"address": "0x879640A080fFbeBF3E31D7D0d34ba4b223f8a84D"
+    	},
+    	"ltc": {
+    		"address": "LU1D7pdQA3wb3kNcxH1W86zovhH2RcShTx"
+    	},
+    	"xrp": {
+    		"address": "rp4rFSJgR6CAcR9LSRJRR2NtYFGnaSwNty"
+    	}
+    }
+    ```
  
 * **Error Response:**
 
   * **Code:** 404 NOT FOUND <br />
     **Content:** 
-```json 
-{ error : "Not found" }
-```
+    ```json 
+    { error : "Not found" }
+    ```
 
 
 **Get specific currency's address**
@@ -196,33 +206,33 @@ Then run npm start. You can choose a port of your own if not it will choose port
 
   * **Code:** 200 <br />
     **Content:** 
-```json 
-{
-	"xrp": [
-		{
-			"txid": "8c1d513971c9249baa33c8d7e31089c1acd581f153a50998214b41797420c14b",
-			"block": null,
-			"created": 1500931080000,
-			"from": "rDCgaaSBAWYfsxUYhCk1n26Na7x8PQGmkq",
-			"to": "r4fKawiUGQ5XRM1Mp9GMrMy52e1712nBah",
-			"value": "29850000",
-			"currency": "xrp",
-			"fee": "150000",
-			"confirmations": 0
-		}
-	],
-	"eth": [],
-	"ltc": []
-}
-```
+    ```json 
+    {
+    	"xrp": [
+    		{
+    			"txid": "8c1d513971c9249baa33c8d7e31089c1acd581f153a50998214b41797420c14b",
+    			"block": null,
+    			"created": 1500931080000,
+    			"from": "rDCgaaSBAWYfsxUYhCk1n26Na7x8PQGmkq",
+    			"to": "r4fKawiUGQ5XRM1Mp9GMrMy52e1712nBah",
+    			"value": "29850000",
+    			"currency": "xrp",
+    			"fee": "150000",
+    			"confirmations": 0
+    		}
+    	],
+    	"eth": [],
+    	"ltc": []
+    }
+    ```
  
 * **Error Response:**
 
   * **Code:** 404 NOT FOUND <br />
     **Content:** 
-```json
-{ error : "Not found" }
-```
+    ```json
+    { error : "Not found" }
+    ```
 
 ## Tests
 
