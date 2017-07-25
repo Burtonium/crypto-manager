@@ -11,6 +11,7 @@ Getting an addresses
 ```
 
 will yield the following response:
+```json
 {
 	"eth": {
 		"address": "0x879640A080fFbeBF3E31D7D0d34ba4b223f8a84D"
@@ -22,7 +23,7 @@ will yield the following response:
 		"address": "rp4rFSJgR6CAcR9LSRJRR2NtYFGnaSwNty"
 	}
 }
-
+```
 
 ## Installation
 
@@ -53,7 +54,7 @@ Then run npm start. You can choose a port of your own if not it will choose port
 * **Success Response:**
 
   * **Code:** 200 <br />
-  * **Content:** `{"eth":{"address":"0x879640A080fFbeBF3E31D7D0d34ba4b223f8a84D"},"ltc":{"address":"LU1D7pdQA3wb3kNcxH1W86zovhH2RcShTx"},"xrp":{"address":"rp4rFSJgR6CAcR9LSRJRR2NtYFGnaSwNty"}}`
+  * **Content:** ```json {"eth":{"address":"0x879640A080fFbeBF3E31D7D0d34ba4b223f8a84D"},"ltc":{"address":"LU1D7pdQA3wb3kNcxH1W86zovhH2RcShTx"},"xrp":{"address":"rp4rFSJgR6CAcR9LSRJRR2NtYFGnaSwNty"}}```
  
 * **Error Response:**
 
@@ -83,7 +84,7 @@ Then run npm start. You can choose a port of your own if not it will choose port
 * **Success Response:**
 
   * **Code:** 200 <br />
-  * **Content:** `{"address":"LU1D7pdQA3wb3kNcxH1W86zovhH2RcShTx"}`
+  * **Content:** ```json {"address":"LU1D7pdQA3wb3kNcxH1W86zovhH2RcShTx"}```
  
 * **Error Response:**
 
@@ -118,7 +119,7 @@ Then run npm start. You can choose a port of your own if not it will choose port
 * **Success Response:**
 
   * **Code:** 200 <br />
-    **Content:** `{
+    **Content:** ```json {
                 	"eth": {
                 		"deposits": "0",
                 		"withdrawals": "0",
@@ -137,7 +138,7 @@ Then run npm start. You can choose a port of your own if not it will choose port
                 		"fees": "0",
                 		"balance": "0"
                 	}
-                }`
+                }```
  
 * **Error Response:**
 
@@ -179,7 +180,7 @@ Then run npm start. You can choose a port of your own if not it will choose port
 * **Success Response:**
 
   * **Code:** 200 <br />
-    **Content:** `{
+    **Content:** ```json {
                 	"xrp": [
                 		{
                 			"txid": "8c1d513971c9249baa33c8d7e31089c1acd581f153a50998214b41797420c14b",
@@ -195,7 +196,7 @@ Then run npm start. You can choose a port of your own if not it will choose port
                 	],
                 	"eth": [],
                 	"ltc": []
-                }`
+                }```
  
 * **Error Response:**
 
