@@ -37,9 +37,11 @@ Then run npm start. You can choose a port of your own if not it will choose port
 ----
   Returns json data including all addresses.
 
-* **URL**
+* **URLs**
 
   /:index
+  
+  /:index/:currency
 
 * **Method:**
 
@@ -50,6 +52,9 @@ Then run npm start. You can choose a port of your own if not it will choose port
    **Required:**
  
    `index=[integer]`
+   
+   **Optional:**
+   `currency=[eth|ltc|xrp]`
 
 * **Success Response:**
 
@@ -75,45 +80,8 @@ Then run npm start. You can choose a port of your own if not it will choose port
   * **Code:** 404 NOT FOUND <br />
   * ***Content:** 
     ```json 
-    { error : "Not found" }
+    { "error" : "Not found" }
     ```
-
-
-**Get specific currency's address**
-----
-  Returns json data including that currency's addresses.
-
-* **URL**
-
-  /:index/:currency
-
-* **Method:**
-
-  `GET`
-  
-*  **URL Params**
-
-   **Required:**
- 
-   `index=[integer]`
-   `currency=[eth|ltc|xrp]`
-
-* **Success Response:**
-
-  * **Code:** 200 <br />
-
-* **Example Return Value:** 
-```json 
-{"address":"LU1D7pdQA3wb3kNcxH1W86zovhH2RcShTx"}
-```
- 
-* **Error Response:**
-
-  * **Code:** 404 NOT FOUND <br />
-  * **Content:** 
-```json 
-{ error : "Not found" }
-```
 
 
 **Get an acccount's balances**
@@ -171,7 +139,7 @@ Then run npm start. You can choose a port of your own if not it will choose port
 * **Error Response:**
 
   * **Code:** 404 NOT FOUND <br />
-    **Content:** `{ error : "Not found" }`
+    **Content:** `{ "error" : "Not found" }`
 
 
 **Get an acccount's transactions**
@@ -235,7 +203,7 @@ Then run npm start. You can choose a port of your own if not it will choose port
   * **Code:** 404 NOT FOUND <br />
     **Content:** 
     ```json
-    { error : "Not found" }
+    { "error" : "Not found" }
     ```
 
 ## Tests
