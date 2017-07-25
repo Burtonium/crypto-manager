@@ -61,7 +61,7 @@ Then run npm start. You can choose a port of your own if not it will choose port
 
   * **Code:** 
 
-  `200` <br />
+    `200` <br />
 
 * **Example Return Value:** 
 
@@ -83,13 +83,13 @@ Then run npm start. You can choose a port of your own if not it will choose port
 
   * **Code:** 
     
-    `404 NOT FOUND` <br />
+      `404 NOT FOUND` <br />
 
   * ***Content:** 
   
-    ```json 
-    { "error" : "Not found" }
-    ```
+      ```json 
+      { "error" : "Not found" }
+      ```
 
 
 **Get an acccount's balances**
