@@ -59,9 +59,7 @@ Then run npm start. You can choose a port of your own if not it will choose port
 
 * **Success Response:**
 
-  * **Code:** 
-
-    `200` <br />
+  * **Code:** `200` <br />
 
 * **Example Return Value:** 
 
@@ -81,16 +79,13 @@ Then run npm start. You can choose a port of your own if not it will choose port
  
 * **Error Responses:**
 
-  * **Code:** 
-    
-      `404 NOT FOUND` <br />
+  * **Code:** `404 NOT FOUND` <br />
 
-  * ***Content:** 
+  * **Content:** 
   
       ```json 
       { "error" : "Not found" }
       ```
-
 
 **Get an acccount's balances**
 ----
@@ -118,9 +113,7 @@ Then run npm start. You can choose a port of your own if not it will choose port
 
 * **Success Response:**
 
-  * **Code:** 
-
-  `200` <br />
+  * **Code:** `200` <br />
 
 * **Example Return Value:** 
 
@@ -149,13 +142,11 @@ Then run npm start. You can choose a port of your own if not it will choose port
  
 * **Error Response:**
 
-  * **Code:** 
-
-  `404 NOT FOUND` <br />
+  * **Code:** `404 NOT FOUND` <br />
   
     **Content:** 
     
-  `{ "error" : "Not found" }`
+        `{ "error" : "Not found" }`
 
 
 **Get an acccount's transactions**
@@ -192,9 +183,7 @@ Then run npm start. You can choose a port of your own if not it will choose port
 
 * **Success Response:**
 
-  * **Code:** 
-
-  `200` <br />
+  * **Code:** `200` <br />
 
 * **Example Return Value:** 
 ```json 
@@ -219,8 +208,10 @@ Then run npm start. You can choose a port of your own if not it will choose port
  
 * **Error Response:**
 
-  * **Code:** 404 NOT FOUND <br />
-    **Content:** 
+  * **Code:** `404 NOT FOUND` <br />
+  
+  * **Content:** 
+
     ```json
     { "error" : "Not found" }
     ```
