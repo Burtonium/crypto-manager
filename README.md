@@ -29,6 +29,8 @@ will yield the following response:
 
 You'll first need to generate a .addresses.json file in each respective server's folder. Tweak the amount of addresses you need and execute generate_addresses.js
 
+If you're running all of the full nodes on different servers make sure you port forward all the necessary servers.
+
 Then run npm start. You can choose a port of your own if not it will choose port 2121.
 
 ## API Reference
