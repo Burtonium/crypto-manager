@@ -169,7 +169,10 @@ class EthereumServer extends CryptoServer {
             from: address
         });
     }
-
+    
+    generate(count) {
+        return 1;
+    }
 }
 
 exports.EthereumServer = EthereumServer;

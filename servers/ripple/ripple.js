@@ -7,12 +7,16 @@ const assert = require('assert');
 // server: ws://localhost:6006
 // wss://s.altnet.rippletest.net:51233
 
-const { CryptoServer, State } = require('../../cryptoserver');
+const {
+    CryptoServer,
+    State
+} = require('../../cryptoserver');
 const addressesPath = __dirname + '/.addresses.json';
 const BASE58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 const bs58 = require('base-x')(BASE58);
 const BigNumber = require('bignumber.js');
 const transactions = require("../../db/transactions");
+var exec = require('child_process').exec;
 
 function toDrop(amount) {
     let x = new BigNumber(amount);
@@ -34,7 +38,7 @@ class RippleTransaction {
     static serialize(args) {
         return {
             txid: Buffer.from(args.txid || args.id, 'hex'),
-            block: args.block || args.outcome.ledgerVersion ,
+            block: args.block || args.outcome.ledgerVersion,
             created: args.created || args.outcome.timestamp,
             from: bs58.decode(args.from || args.specification.source.address),
             to: bs58.decode(args.to || args.specification.destination.address),
@@ -89,6 +93,10 @@ class RippleServer extends CryptoServer {
         console.log('Ripple server up to date');
 
         this.state = State.Idle;
+    }
+
+    currentBlock() {
+        return this.currentLedger();
     }
 
     async currentLedger() {
@@ -186,7 +194,7 @@ class RippleServer extends CryptoServer {
             console.log('Failure:', submitted);
         }
     }
-    
+
     nextAvailableLedger(ledgerVersion) {
         ledgerVersion = parseInt(ledgerVersion);
         if (!ledgerVersion) return false;
@@ -204,6 +212,25 @@ class RippleServer extends CryptoServer {
         throw new Error('Out of bounds');
     }
 
+    generate(count) {
+        return new Promise((resolve, reject) => {
+            console.log(count, ' blocks')
+            if (count <= 0) {
+                return resolve();
+            }
+            let dir = exec("/opt/ripple/bin/rippled ledger_accept", (err, stdout, stderr) => {
+                if (err) {
+                    reject(err);
+                }
+                console.log(stdout);
+            });
+
+            dir.on('exit', (code) => {
+                return this.generate(count - 1);
+            });
+        })
+
+    }
 }
 
 exports.RippleServer = RippleServer;

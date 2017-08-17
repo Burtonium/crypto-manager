@@ -40,6 +40,11 @@ const parallelize = async (task, args) => {
         return server.init();
     }));
     
+    console.log(await servers.xrp.currentBlock());
+    await servers.xrp.generate(3);
+    console.log(await servers.xrp.currentBlock());
+    
+    
 })().then(() => {
     
     /* Parameters */
@@ -148,6 +153,16 @@ const parallelize = async (task, args) => {
         res.json(response);
     });
     
+    if (process.env.NODE_ENV === 'development') {
+        app.post('/:currency/generate/:count(\\d+)?', async (req, res, next) => {
+            const currency = req.params.currency;
+            const count = req.params.count || 1;
+            
+            let response = await servers[currency].generate(count);
+            res.json({response});
+        })
+    } 
+    
     app.get('*', function(req, res) {
         res.status(404).send({error: 'Not found'});
     });
@@ -172,4 +187,5 @@ const parallelize = async (task, args) => {
     process.exit();
 });
 
-module.exports = app;
+module.exports.app = app;
+module.exports.cryptoservers = servers;

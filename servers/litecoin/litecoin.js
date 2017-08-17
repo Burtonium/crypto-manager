@@ -187,6 +187,10 @@ class LitecoinServer extends CryptoServer {
             return await this.insertMatchedTransactions(block);
         }
     }
+    
+    generate(count) {
+        return this.client.generate(count); 
+    }
 }
 
 exports.LitecoinServer = LitecoinServer;

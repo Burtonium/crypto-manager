@@ -1,0 +1,1 @@
+geth -rpc --rpcport "8545" -rpccorsdomain "*" --nodiscover console 2 --datadir "/home/burton/.ethereum" --mine --etherbase "0x28901e5a4d0e30cb7c9b23a07c60ffef65511b6a"

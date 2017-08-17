@@ -179,6 +179,14 @@ class CryptoServer {
     set state(state) {
         this._state = state;
     }
+    
+    get currency() {
+        return this._currency;
+    }
+    
+    set currency(c) {
+        this._currency = c;
+    }
 }
 
 exports.CryptoServer = CryptoServer;

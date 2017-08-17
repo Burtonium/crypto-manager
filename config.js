@@ -1,4 +1,3 @@
-
 module.exports = {
     "LTC_USER": process.env.LTC_USER || "ltc-server",
     "LTC_PASS": process.env.LTC_PASS || "TotallySecurePassword",
