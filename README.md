@@ -225,9 +225,3 @@ No tests as of yet
 ## Contributors
 
 [Matt Burton](https://github.com/burtonium)
-
-## License
-
-***Internal Use Only***
-
-All rights reserved by 1081627 BC Ltd
